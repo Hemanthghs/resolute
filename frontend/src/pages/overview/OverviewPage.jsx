@@ -14,6 +14,7 @@ export default function OverviewPage() {
   const tokenInfo = useSelector(
     (state) => state.common.allTokensInfoState.info
   );
+  console.log("tetetetetete")
 
   useEffect(() => {
     if (

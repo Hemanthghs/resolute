@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { getDelegations } from "../../../features/staking/stakeSlice";
-import { getBalances } from "../../../features/bank/bankSlice";
+import { getBalances, signTest, signVerify } from "../../../features/bank/bankSlice";
 import { getDelegatorTotalRewards } from "../../../features/distribution/distributionSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ChainDetails } from "./ChainDetails";
@@ -25,6 +25,7 @@ import { formatNumber, parseBalance } from "../../../utils/denom";
 import { Button } from "@mui/material";
 import chainDenoms from "../../../utils/chainDenoms.json";
 import { useNavigate } from "react-router-dom";
+import { SignMsg } from "../../../txns/gov/deposit";
 
 export const paddingTopBottom = {
   paddingTop: 1,
@@ -250,6 +251,11 @@ export const ChainsOverview = ({ chainNames }) => {
     [getIBCSortedCHainIds]
   );
 
+  const handleClick = () => {
+    dispatch(signTest());
+    // dispatch(signVerify());
+  }
+
   return (
     <Paper sx={{ p: 2, mt: 2 }} elevation={0}>
       <Grid
@@ -446,6 +452,9 @@ export const ChainsOverview = ({ chainNames }) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Button onClick={() => {
+        handleClick()
+      }}>Test</Button>
     </Paper>
   );
 };

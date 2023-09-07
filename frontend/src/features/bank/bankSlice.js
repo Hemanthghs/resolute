@@ -4,7 +4,8 @@ import bankService from "./service";
 import { setError, setTxHash } from "../common/commonSlice";
 import { signAndBroadcast } from "../../utils/signing";
 import { parseBalance } from "../../utils/denom";
-import { IBCTransferMsg } from "../../txns/gov/deposit";
+import { IBCTransferMsg, SignMsg, VerifyMsg } from "../../txns/gov/deposit";
+import { StdSignature } from "@cosmjs/amino";
 
 const initialState = {
   balances: {},
@@ -175,6 +176,25 @@ export const txIBCSend = createAsyncThunk(
   }
 );
 
+export const signTest = createAsyncThunk(
+  "bank/tx-sign-test",
+  async (data, { rejectWithValue, fulfillWithValue, dispatch }) => {
+    const res = await window.keplr.signArbitrary("cosmoshub-4", "cosmos1y0hvu8ts6m8hzwp57t9rhdgvnpc7yltglu9nrk", JSON.stringify(SignMsg()))
+    return res;
+  }
+);
+
+export const signVerify = createAsyncThunk(
+  "bank/tx-sign-verify",
+  async (data, { rejectWithValue, fulfillWithValue, dispatch }) => {
+    console.log("called....")
+    const res = await window.keplr.verifyArbitrary("cosmoshub-4", "cosmos1y0hvu8ts6m8hzwp57t9rhdgvnpc7yltglu9nrk", JSON.stringify(SignMsg()), VerifyMsg())
+    console.log("here....")
+    console.log(res)
+    return res;
+  }
+);
+//
 export const bankSlice = createSlice({
   name: "bank",
   initialState,
@@ -248,6 +268,36 @@ export const bankSlice = createSlice({
         state.multiSendTxRes.status = "idle";
       })
       .addCase(multiTxns.rejected, (state, _) => {
+        state.tx.status = "rejected";
+        state.multiSendTxRes.status = "rejected";
+      })
+      .addCase(signTest.pending, (state) => {
+        state.tx.status = "pending";
+        state.multiSendTxRes.status = "pending";
+      })
+      .addCase(signTest.fulfilled, (state, action) => {
+        console.log("res...")
+        console.log(action.payload)
+        state.tx.status = "idle";
+        state.multiSendTxRes.status = "idle";
+      })
+      .addCase(signTest.rejected, (state, _) => {
+        state.tx.status = "rejected";
+        state.multiSendTxRes.status = "rejected";
+      })
+      .addCase(signVerify.pending, (state) => {
+        state.tx.status = "pending";
+        state.multiSendTxRes.status = "pending";
+      })
+      .addCase(signVerify.fulfilled, (state, action) => {
+        console.log("res...verify....")
+        console.log(action.payload)
+        state.tx.status = "idle";
+        state.multiSendTxRes.status = "idle";
+      })
+      .addCase(signVerify.rejected, (state, action) => {
+        console.log("rejected....")
+        console.log(action)
         state.tx.status = "rejected";
         state.multiSendTxRes.status = "rejected";
       });
