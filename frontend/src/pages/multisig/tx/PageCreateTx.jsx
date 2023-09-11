@@ -598,7 +598,7 @@ export default function PageCreateTx() {
                   );
                 })}
 
-                {messages.length > 0 ? (
+                {messages.length > 6 ? (
                   <Pagination
                     sx={{
                       mt: 1,
