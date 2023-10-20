@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import PermanentSideBar from "../components/PermanentSidebar";
 import { ConnectWalletButton } from "../components/ConnectWalletButton";
+import { StoreProvider } from "../store/StoreProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,15 +17,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log("here....123")
   return (
     <html lang="en">
       <body className={inter.className}>
         {
-          <div className="layout">
-            <ConnectWalletButton>
-              <PermanentSideBar> {children}</PermanentSideBar>
-            </ConnectWalletButton>
-          </div>
+          <StoreProvider>
+            <div className="layout">
+              <ConnectWalletButton>
+                <PermanentSideBar> {children}</PermanentSideBar>
+              </ConnectWalletButton>
+            </div>
+          </StoreProvider>
         }
       </body>
     </html>
