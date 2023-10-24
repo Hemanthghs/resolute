@@ -67,6 +67,7 @@ export const getProposalsInDeposit = createAsyncThunk(
 export const getProposalsInVoting = createAsyncThunk(
   "gov/active-proposals",
   async (data, { dispatch }) => {
+    dispatch(resetTx2())
     const response = await govService.proposals(
       data.baseURL,
       data.key,
@@ -156,6 +157,9 @@ export const proposalsSlice = createSlice({
         status: "",
       };
     },
+    resetTx2: (state) => {
+      state.loading += 10
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -165,7 +169,7 @@ export const proposalsSlice = createSlice({
         chainData.status = "pending";
         chainData.errMsg = "";
         state.active[chainID] = chainData;
-        state.loading++;
+       state.loading++;
       })
       .addCase(getProposalsInVoting.fulfilled, (state, action) => {
         console.log("here....");
@@ -179,7 +183,6 @@ export const proposalsSlice = createSlice({
             pagination: action.payload?.pagination,
           };
           state.active[chainID] = result;
-          console.log(state.active?.["cosmoshub-4"]);
           state.loading--;
         }
       })
@@ -189,7 +192,6 @@ export const proposalsSlice = createSlice({
         chainData.status = "rejected";
         chainData.errMsg = action.error.message;
         state.active[chainID] = chainData;
-        state.loading--;
       });
 
     builder
@@ -202,6 +204,7 @@ export const proposalsSlice = createSlice({
         state.loading++;
       })
       .addCase(getProposalsInDeposit.fulfilled, (state, action) => {
+        console.log(action.payload)
         const chainID = action.payload?.chainID || "";
         if (chainID.length > 0) {
           let result = {
@@ -305,5 +308,5 @@ export const proposalsSlice = createSlice({
   },
 });
 
-export const { resetTx, resetLoading } = proposalsSlice.actions;
+export const { resetTx, resetLoading, resetTx2 } = proposalsSlice.actions;
 export default proposalsSlice.reducer;

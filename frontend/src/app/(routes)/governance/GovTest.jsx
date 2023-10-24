@@ -2,10 +2,12 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProposalsInVoting } from "../../../store/features/govSlice";
+import { getProposalsInVoting, resetTx2 } from "../../../store/features/govSlice";
+import { increment } from "../../../store/features/counterSlice";
 
 const GovTest = () => {
   const proposals = useSelector((state) => state.gov.active.proposals);
+  const count = useSelector((state) => state.gov.loading);
 
   const dispatch = useDispatch();
 
