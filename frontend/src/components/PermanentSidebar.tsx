@@ -9,12 +9,12 @@ import { getSelectedPartFromURL } from "../utils/util";
 
 const menuItems = [
   {
-    name: "Overview",
+    name: "Overview -123",
     icon: "/overview-icon.svg",
     link: "/",
   },
   {
-    name: "Transfers",
+    name: "Transfers -1 123",
     icon: "/transfers-icon.svg",
     link: "/transfers",
   },
